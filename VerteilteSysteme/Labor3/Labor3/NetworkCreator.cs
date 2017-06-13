@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Labor3
 {
-    public static class NodeCreator
+    public static class NetworkCreator
     {
 
 
 
-        public static void InitNodes()
+        public static void InitNetwork()
         {
 
         }

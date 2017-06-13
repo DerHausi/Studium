@@ -11,18 +11,20 @@ namespace Labor3
     class Node
     {
         public UdpClient Socket { get; set; }
-        public IPEndPoint Parent { get; set; }
         public string Name { get; set; }
         public uint MemorySize { get; set; }
-
+        public IPEndPoint ParentAddress { get; set; }
+        public IPEndPoint LoggerAddress { get; set; }
 
         private List<IPEndPoint> Neighbors = new List<IPEndPoint>();
         private bool _isInformed = false;
         private uint _informedNeighbors = 0;
 
-        public Node()
+        public Node(string name, uint size, IPEndPoint address)
         {
-
+            Name = name;
+            MemorySize = size;
+            Socket = new UdpClient(address);
         }
 
         public void Receive(IPEndPoint recvFrom, Message message)
@@ -33,7 +35,7 @@ namespace Labor3
                     _informedNeighbors++;
                     if (!_isInformed)
                     {
-                        Parent = recvFrom;
+                        ParentAddress = recvFrom;
                         _isInformed = true;
                         // TODO send to all neighbors 
                     }

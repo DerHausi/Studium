@@ -12,7 +12,14 @@ namespace Labor3
     class Logger
     {
         public UdpClient Socket { get; set; }
-        
+
+
+        private IPEndPoint LoggerAddress = new IPEndPoint(IPAddress.Parse("192.168.2.10"), 6666);
+
+        public Logger()
+        {
+          
+        }
 
 
     }
