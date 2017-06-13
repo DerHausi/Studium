@@ -45,6 +45,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

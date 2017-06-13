@@ -10,7 +10,8 @@ namespace Labor3
     {
         Info,
         Echo,
-        Logging
+        Logging,
+        Neighbors
     }
 
     [Serializable]
@@ -80,6 +81,8 @@ namespace Labor3
             return data;
         }
 
+
+
         public static Message FromByteArray(byte[] byteArray)
         {
             using (var ms = new MemoryStream(byteArray))
@@ -95,7 +98,6 @@ namespace Labor3
                     Console.WriteLine($"Error: Error when parsing byte array to message: {e.Message}");
                     throw;
                 }
-
                 return message;
             }
         }
