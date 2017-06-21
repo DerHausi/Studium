@@ -40,15 +40,19 @@ namespace Labor3
                     {
                         ParentAddress = recvFrom;
                         _isInformed = true;
-                        // TODO send to all neighbors 
+                        // send to all neighbors 
+                        foreach (var neighbor in Neighbors)
+                        {
+                            Message mes = new Message(MessageType.Info, 0, null);
+                            Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, neighbor);
+                        }
                     }
                     break;
                 case MessageType.Echo:
                     _informedNeighbors++;
                     // sum size
                     CumulatedSize += uint.Parse(message.Data);
-
-
+                    // check if all neigbors are informed
                     if (_informedNeighbors == Neighbors.Count)
                     {
                         // send to Parent
@@ -62,8 +66,7 @@ namespace Labor3
                     Console.WriteLine("Not a Logger!!!");
                     break;
                 case MessageType.Neighbors:
-
-
+                    
                     break;
                 default:
                     break;
