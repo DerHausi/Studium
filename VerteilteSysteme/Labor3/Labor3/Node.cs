@@ -18,7 +18,7 @@ namespace Labor3
         public IPEndPoint ParentAddress { get; set; }
         public IPEndPoint LoggerAddress { get; set; }
 
-        private List<IPEndPoint> Neighbors = new List<IPEndPoint>();
+        private NeighborList Neighbors = new NeighborList();
         private bool _isInformed = false;
         private uint _informedNeighbors = 0;
 
@@ -71,8 +71,6 @@ namespace Labor3
                 default:
                     break;
             }
-
-        }        
-
+        }    
     }
 }
