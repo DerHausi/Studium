@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labor3", "Labor3\Labor3.csproj", "{ADCBE447-E594-4C71-A63B-0C27EE5C3D5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Node", "Node\Node.csproj", "{C4B94908-415F-4775-9925-FEEF43E2BCEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeStarter", "Node\NodeStarter.csproj", "{C4B94908-415F-4775-9925-FEEF43E2BCEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Labor3_Echo", "Labor3_Echo\Labor3_Echo.csproj", "{07090EF5-7EFE-43E5-9817-6EBB3D13640A}"
 EndProject

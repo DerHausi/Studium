@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace Labor3_Echo
 {
-    class Node
+    public class Node
     {
         public UdpClient Socket { get; set; }
         public string Name { get; set; }

@@ -24,6 +24,7 @@ namespace Labor3
 
         public void Start(IPEndPoint initNode)
         {
+            Console.WriteLine("Logger Started...");
             string input = "";
             // lauschen
             Task receiverTask = Task.Run(() =>

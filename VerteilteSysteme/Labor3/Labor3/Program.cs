@@ -16,10 +16,6 @@ namespace Labor3
             // TODO erstelle Logger
             Logger logger = new Logger();
             logger.Start(initNode);
-
-
-
-
         }
     }
 }

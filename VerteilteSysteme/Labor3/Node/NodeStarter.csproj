@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Labor3_Echo\Labor3_Echo.csproj">
+      <Project>{07090ef5-7efe-43e5-9817-6ebb3d13640a}</Project>
+      <Name>Labor3_Echo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
