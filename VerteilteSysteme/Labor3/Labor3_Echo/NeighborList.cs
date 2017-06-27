@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Labor3
+namespace Labor3_Echo
 {
     public class NeighborList : List<IPEndPoint>
     {
@@ -15,7 +15,7 @@ namespace Labor3
             foreach(var addr in addresses)
             {
                 string[] adString = addr.Split(':');
-                IPEndPoint endPoint = new IPEndPoint(long.Parse(adString[0]), int.Parse(adString[1]));
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(adString[0]), int.Parse(adString[1]));
                 Add(endPoint);
             }
         }

@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Labor3
+namespace Labor3_Echo
 {
     public enum MessageType
     {
@@ -94,9 +94,5 @@ namespace Labor3
                 return message;
             }
         }
-
-        public static 
-
-
     }
 }

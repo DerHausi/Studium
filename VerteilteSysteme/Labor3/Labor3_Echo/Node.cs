@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Labor3
+namespace Labor3_Echo
 {
     class Node
     {
@@ -16,7 +12,7 @@ namespace Labor3
         public uint CumulatedSize { get; set; }
 
         public IPEndPoint ParentAddress { get; set; }
-        public IPEndPoint LoggerAddress { get; set; }
+        public IPEndPoint LoggerAddress = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 6666);
 
         private NeighborList Neighbors = new NeighborList();
         private bool _isInformed = false;

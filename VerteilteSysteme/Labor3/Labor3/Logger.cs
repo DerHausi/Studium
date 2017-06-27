@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Labor3_Echo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,15 +12,54 @@ namespace Labor3
 {
     class Logger
     {
-        public UdpClient Socket { get; set; }
-
-        private IPEndPoint LoggerAddress = new IPEndPoint(IPAddress.Parse("192.168.2.10"), 6666);
+        private UdpClient Socket { get; set; }
+        private const string Address = "192.168.178.69";
+        private const int Port = 6666;
+        private IPEndPoint LoggerAddress = new IPEndPoint(IPAddress.Parse(Address), Port);
 
         public Logger()
         {
-          
+            Socket = new UdpClient(Port);
         }
 
+        public void Start(IPEndPoint initNode)
+        {
+            string input = "";
+            // lauschen
+            Task receiverTask = Task.Run(() =>
+            {
+                bool isRunning = true;
+                while(input != "stop" || isRunning)
+                {
+                    IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
+                    byte[] receivedBytes = Socket.Receive(ref sender);
+
+                    Message message = Message.FromByteArray(receivedBytes);
+
+                    if(message.Type == MessageType.Logging)
+                        Console.WriteLine(message.Data);
+                    else if( message.Type == MessageType.Echo)
+                    {
+                        Console.WriteLine("The size of the network is: " + message.Data );
+                        isRunning = false;
+                    }
+                }
+            });
+
+            // start the algorithm
+            do
+            {
+                input = Console.ReadLine();
+            } while (input != "start");
+            
+            Message mes = new Message(MessageType.Info, 0, null);
+            Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, initNode);
+            // stop the algorithm
+            do
+            {
+                input = Console.ReadLine();
+            } while (input != "stop");
+        }
     }
 }
