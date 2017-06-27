@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Labor3_Echo;
+using System.Net.Sockets;
 
 namespace NodeStarter
 {
@@ -14,28 +15,34 @@ namespace NodeStarter
         {
             Console.WriteLine("Node started!");
             Random r = new Random((int)DateTime.Now.Ticks);
-            uint size = (uint) r.Next(2, 42);
-            IPEndPoint address = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2220);
-            Node me = new Node("Node " + 2220, size, address);
-
+            uint size = (uint)r.Next(2, 42);
+            IPEndPoint address = new IPEndPoint(IPAddress.Parse("192.168.178.69"), int.Parse(args[0]));
+            Node me = new Node("Node " + int.Parse(args[0]), size, address);
+            Console.WriteLine(me.Name + ": " + size);
             string check = "";
             bool isRunning = true;
-            while(isRunning)
+
+            Task receiverTask = Task.Run(() =>
             {
-                Task receiverTask = Task.Run(() =>
-                {                    
-                    while (isRunning)
+                while (isRunning)
+                {
+                    try
                     {
                         IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
                         byte[] receivedBytes = me.Socket.Receive(ref sender);
                         Message message = Message.FromByteArray(receivedBytes);
                         me.Receive(sender, message);
                     }
-                });
-                while (check != "stop")
-                    check = Console.ReadLine();
-                isRunning = false;
-            }            
+                    catch (SocketException e)
+                    {
+                        me.Socket.Close();
+                        me.Socket = new UdpClient(address);
+                    }
+                }
+            });
+            while (check != "stop")
+                check = Console.ReadLine();
+            isRunning = false;            
         }
     }
 }

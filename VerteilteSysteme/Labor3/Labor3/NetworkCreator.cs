@@ -12,6 +12,7 @@ namespace Labor3
     public static class NetworkCreator
     {
         public static UdpClient Socket = new UdpClient();
+        public static IPEndPoint logger = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 6666);
         public static IPEndPoint node0 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2220);
         public static IPEndPoint node1 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2221);
         public static IPEndPoint node2 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2222);
@@ -25,7 +26,7 @@ namespace Labor3
         public static IPEndPoint InitNetwork()
         {
             // init nodes
-            SendNeighbors(node0, node1, node3);
+            SendNeighbors(node0, node1, node3, logger);
             SendNeighbors(node1, node0, node2, node4);
             SendNeighbors(node2, node1, node3, node5);
             SendNeighbors(node3, node0, node2, node6);

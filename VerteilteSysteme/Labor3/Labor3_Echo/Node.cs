@@ -37,53 +37,58 @@ namespace Labor3_Echo
                     if (!_isInformed)
                     {
                         ParentAddress = recvFrom;
+                        Console.WriteLine("My Parent Node is: " + ParentAddress.Port);
                         _isInformed = true;
-                        // send to all neighbors 
+                        // send to all neighbors                                                
                         foreach (var neighbor in Neighbors)
                         {
-                            Message mes = new Message(MessageType.Info, 0, null);
-                            Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, neighbor);
-                        }
+                            if(!(neighbor.Port == ParentAddress.Port) )
+                            {
+                                Message mes = new Message(MessageType.Info, 0, null);
+                                Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, neighbor);
+                                Console.WriteLine("Send INFO to: " + neighbor.Port);
+                            }
+                        }                        
                         // create message to Logger with parent node
-                        message.Data += " is Parent Node";
+                        message.Data += (" is Parent Node of " + Name);                                               
                     }
                     else
                     {
                         // create message to Logger with neighbor node
-                        message.Data += " is Neighbor Node";
+                        message.Data += " is Neighbor Node";                        
                     }
                     // send info message to Logger
-                    Socket.Send(message.ToByteArray(), message.ToByteArray().Length, LoggerAddress);
+                    Socket.Send(message.ToByteArray(), message.ToByteArray().Length, LoggerAddress);                    
                     break;
                 case MessageType.Echo:
-                    _informedNeighbors++;
+                    _informedNeighbors++;                   
+                    // sum size
+                    CumulatedSize += uint.Parse(message.Data);                    
                     Message mesLog = new Message(MessageType.Logging, 0, recvFrom.ToString());
                     mesLog.Data = mesLog.Data + " has send Echo with size: " + message.Data;
                     Socket.Send(mesLog.ToByteArray(), mesLog.ToByteArray().Length, LoggerAddress);
-                    // sum size
-                    CumulatedSize += uint.Parse(message.Data);
-                    // check if all neigbors are informed
-                    if (_informedNeighbors == Neighbors.Count)
-                    {
-                        // send to Parent
-                        Message mes = new Message(MessageType.Echo, 0, CumulatedSize.ToString());
-                        Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, ParentAddress);
-                        mesLog.Data = Name + " echos to his Parent with size: " + CumulatedSize;
-                        Socket.Send(mesLog.ToByteArray(), mesLog.ToByteArray().Length, LoggerAddress);
-                        // reset sum
-                        CumulatedSize = MemorySize;
-                    }                    
                     break;
                 case MessageType.Logging:
                     Console.WriteLine("Not a Logger!!!");
                     break;
                 case MessageType.Neighbors:
-                    // TODO save the NeighborList
-                    Neighbors.AddFromString(message.Data);
+                    // save the NeighborList
+                    Neighbors.AddFromString(message.Data);                    
                     break;
                 default:
                     break;
             }
+            // check if all neigbors are informed
+            if (_informedNeighbors == Neighbors.Count)
+            {
+                Console.WriteLine("Send ECHO to: " + ParentAddress.Port + " with size: " + CumulatedSize);
+                // send to Parent
+                Message mesEcho = new Message(MessageType.Echo, 0, CumulatedSize.ToString());
+                Socket.Send(mesEcho.ToByteArray(), mesEcho.ToByteArray().Length, ParentAddress);
+               
+                CumulatedSize = MemorySize;
+            }
+
         }    
     }
 }

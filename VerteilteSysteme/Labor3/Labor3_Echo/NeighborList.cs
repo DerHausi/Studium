@@ -14,9 +14,12 @@ namespace Labor3_Echo
             List<string> addresses = s.Split(';').ToList();
             foreach(var addr in addresses)
             {
-                string[] adString = addr.Split(':');
-                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(adString[0]), int.Parse(adString[1]));
-                Add(endPoint);
+                if(addr != "")
+                {
+                    string[] adString = addr.Split(':');
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(adString[0]), int.Parse(adString[1]));
+                    Add(endPoint);
+                }
             }
         }
         
@@ -24,9 +27,7 @@ namespace Labor3_Echo
         {
             string message = "";
             foreach(var v in this)
-            {
-                message += (v.Address + ":" + v.Port + ";");
-            }
+                message += (v.Address + ":" + v.Port + ";");            
             return message;
         }
     }
