@@ -36,6 +36,8 @@ namespace Labor3
             {
                 case MessageType.Info:
                     _informedNeighbors++;
+                    message.Type = MessageType.Logging;
+                    message.Data = recvFrom.ToString();
                     if (!_isInformed)
                     {
                         ParentAddress = recvFrom;
@@ -46,10 +48,22 @@ namespace Labor3
                             Message mes = new Message(MessageType.Info, 0, null);
                             Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, neighbor);
                         }
+                        // create message to Logger with parent node
+                        message.Data += " is Parent Node";
                     }
+                    else
+                    {
+                        // create message to Logger with neighbor node
+                        message.Data += " is Neighbor Node";
+                    }
+                    // send info message to Logger
+                    Socket.Send(message.ToByteArray(), message.ToByteArray().Length, LoggerAddress);
                     break;
                 case MessageType.Echo:
                     _informedNeighbors++;
+                    Message mesLog = new Message(MessageType.Logging, 0, recvFrom.ToString());
+                    mesLog.Data = mesLog.Data + " has send Echo with size: " + message.Data;
+                    Socket.Send(mesLog.ToByteArray(), mesLog.ToByteArray().Length, LoggerAddress);
                     // sum size
                     CumulatedSize += uint.Parse(message.Data);
                     // check if all neigbors are informed
@@ -58,15 +72,18 @@ namespace Labor3
                         // send to Parent
                         Message mes = new Message(MessageType.Echo, 0, CumulatedSize.ToString());
                         Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, ParentAddress);
+                        mesLog.Data = Name + " echos to his Parent with size: " + CumulatedSize;
+                        Socket.Send(mesLog.ToByteArray(), mesLog.ToByteArray().Length, LoggerAddress);
                         // reset sum
                         CumulatedSize = MemorySize;
-                    }
+                    }                    
                     break;
                 case MessageType.Logging:
                     Console.WriteLine("Not a Logger!!!");
                     break;
                 case MessageType.Neighbors:
-                    
+                    // TODO save the NeighborList
+                    Neighbors.AddFromString(message.Data);
                     break;
                 default:
                     break;
