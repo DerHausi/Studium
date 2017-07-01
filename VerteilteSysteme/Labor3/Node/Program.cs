@@ -15,7 +15,7 @@ namespace NodeStarter
         {
             Console.WriteLine("Node started!");
             Random r = new Random((int)DateTime.Now.Ticks);
-            uint size = (uint)r.Next(2, 42);
+            uint size = (uint)r.Next(1, 11);
             IPEndPoint address = new IPEndPoint(IPAddress.Parse("192.168.178.69"), int.Parse(args[0]));
             Node me = new Node("Node " + int.Parse(args[0]), size, address);
             Console.WriteLine(me.Name + ": " + size);
