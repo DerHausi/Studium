@@ -28,6 +28,11 @@ namespace Labor3_Echo
 
         public void Receive(IPEndPoint recvFrom, Message message)
         {
+            // simulating the lag of the network betwee 0 an 100 milisec
+            Random r = new Random((int)DateTime.Now.Ticks);
+            int lagTime = r.Next(0, 100);
+            System.Threading.Thread.Sleep(lagTime);
+
             switch (message.Type)
             {
                 case MessageType.Info:
