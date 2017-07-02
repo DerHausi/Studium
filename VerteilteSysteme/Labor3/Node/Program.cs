@@ -13,6 +13,7 @@ namespace NodeStarter
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Node started!");
             Random r = new Random((int)DateTime.Now.Ticks);
             uint size = (uint)r.Next(1, 11);
             IPEndPoint address = new IPEndPoint(IPAddress.Parse("192.168.178.69"), int.Parse(args[0]));
