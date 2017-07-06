@@ -10,7 +10,7 @@ namespace Labor3_Echo
         public string Name { get; set; }
         public uint MemorySize { get; set; }
         public uint CumulatedSize { get; set; }
-
+        public IPEndPoint MyAddress { get; set; }
         public IPEndPoint ParentAddress { get; set; }
         public IPEndPoint LoggerAddress = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 6666);
 
@@ -24,6 +24,7 @@ namespace Labor3_Echo
             MemorySize = size;
             Socket = new UdpClient(address);
             CumulatedSize = size;
+            MyAddress = address;
         }
 
         public void Receive(IPEndPoint recvFrom, Message message)
@@ -32,46 +33,38 @@ namespace Labor3_Echo
             Random r = new Random((int)DateTime.Now.Ticks);
             int lagTime = r.Next(0, 100);
             System.Threading.Thread.Sleep(lagTime);
+            Message logMessage = new Message(MessageType.Logging, 0, "");
 
             switch (message.Type)
             {
                 case MessageType.Info:
-                    _informedNeighbors++;
-                    message.Type = MessageType.Logging;
-                    message.Data = recvFrom.ToString();
+                    // send size message to Logger
+                    logMessage.Data = "Info: From: 192.168.178.69:" + recvFrom.Port + " To: 192.168.178.69:" + MyAddress.Port;
+                    Socket.Send(logMessage.ToByteArray(), logMessage.ToByteArray().Length, LoggerAddress);
+                    _informedNeighbors++;                    
                     if (!_isInformed)
-                    {
+                    {                       
                         ParentAddress = recvFrom;
                         Console.WriteLine("My Parent Node is: " + ParentAddress.Port);
                         _isInformed = true;
-                        // send to all neighbors                                                
+                        // send to all neighbors but not parent                                                
                         foreach (var neighbor in Neighbors)
                         {
-                            if(!(neighbor.Port == ParentAddress.Port) )
+                            if(neighbor.Port != ParentAddress.Port)
                             {
                                 Message mes = new Message(MessageType.Info, 0, null);
                                 Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, neighbor);
                                 Console.WriteLine("Send INFO to: " + neighbor.Port);
                             }
-                        }                        
-                        // create message to Logger with parent node
-                        message.Data += (" is Parent Node of " + Name);                                               
-                    }
-                    else
-                    {
-                        // create message to Logger with neighbor node
-                        message.Data += " is Neighbor Node";                        
-                    }
-                    // send info message to Logger
-                    Socket.Send(message.ToByteArray(), message.ToByteArray().Length, LoggerAddress);                    
+                        }                      
+                    }                                       
                     break;
-                case MessageType.Echo:
-                    _informedNeighbors++;                   
+                case MessageType.Echo:                    
+                    _informedNeighbors++;
+                    logMessage.Data = "Echo: From: 192.168.178.69:" + recvFrom.Port + " To: 192.168.178.69:" + MyAddress.Port + " Value: " + CumulatedSize;
                     // sum size
-                    CumulatedSize += uint.Parse(message.Data);                    
-                    Message mesLog = new Message(MessageType.Logging, 0, recvFrom.ToString());
-                    mesLog.Data = mesLog.Data + " has send Echo with size: " + message.Data;
-                    Socket.Send(mesLog.ToByteArray(), mesLog.ToByteArray().Length, LoggerAddress);
+                    CumulatedSize += uint.Parse(message.Data);
+                    Socket.Send(logMessage.ToByteArray(), logMessage.ToByteArray().Length, LoggerAddress);
                     break;
                 case MessageType.Logging:
                     Console.WriteLine("Not a Logger!!!");
@@ -82,7 +75,7 @@ namespace Labor3_Echo
                     break;
                 default:
                     break;
-            }
+            }            
             // check if all neigbors are informed
             if (_informedNeighbors == Neighbors.Count)
             {
@@ -90,10 +83,9 @@ namespace Labor3_Echo
                 // send to Parent
                 Message mesEcho = new Message(MessageType.Echo, 0, CumulatedSize.ToString());
                 Socket.Send(mesEcho.ToByteArray(), mesEcho.ToByteArray().Length, ParentAddress);
-               
+                // reset the size for later messages
                 CumulatedSize = MemorySize;
             }
-
         }    
     }
 }

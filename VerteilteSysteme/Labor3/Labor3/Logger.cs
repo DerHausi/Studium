@@ -30,7 +30,7 @@ namespace Labor3
             Task receiverTask = Task.Run(() =>
             {
                 bool isRunning = true;
-                while(input != "stop" || isRunning)
+                while (input != "stop" || isRunning)
                 {
                     IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
@@ -38,21 +38,17 @@ namespace Labor3
 
                     Message message = Message.FromByteArray(receivedBytes);
 
-                    if(message.Type == MessageType.Logging)
+                    if (message.Type == MessageType.Logging)
                         Console.WriteLine(message.Data);
-                    else if( message.Type == MessageType.Echo)
+                    else if (message.Type == MessageType.Echo)
                     {
+                        Console.WriteLine("Echo: From: 192.168.178.69:" + sender.Port + " To: 192.168.178.69:" + Port + " Value: " + message.Data);
                         Console.WriteLine("The size of the network is: " + message.Data );
+                        Console.WriteLine("Algorithm STOPPED!");
                         isRunning = false;
                     }
                 }
-            });
-
-            // start the algorithm
-            do
-            {
-                input = Console.ReadLine();
-            } while (input != "start");
+            });          
             
             Message mes = new Message(MessageType.Info, 0, null);
             Socket.Send(mes.ToByteArray(), mes.ToByteArray().Length, initNode);

@@ -18,7 +18,7 @@ namespace NodeStarter
             uint size = (uint)r.Next(1, 11);
             IPEndPoint address = new IPEndPoint(IPAddress.Parse("192.168.178.69"), int.Parse(args[0]));
             Node me = new Node("Node " + int.Parse(args[0]), size, address);
-            Console.WriteLine(me.Name + ": " + size);
+            Console.WriteLine(me.Name + " has the Memory Size: " + size);
             string check = "";
             bool isRunning = true;
 

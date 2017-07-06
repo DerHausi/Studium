@@ -24,9 +24,9 @@ namespace Labor3
         public static IPEndPoint node8 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2228);
         public static IPEndPoint node9 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2229);
         public static IPEndPoint node10 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2230);
-        public static IPEndPoint node11 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2211);
+        public static IPEndPoint node11 = new IPEndPoint(IPAddress.Parse("192.168.178.69"), 2231);
 
-        public static IPEndPoint InitNetwork()
+        public static void InitNetwork()
         {
             // init nodes
             SendNeighbors(node0, node1, node2, node3, logger);
@@ -40,10 +40,7 @@ namespace Labor3
             SendNeighbors(node8, node4, node5, node9, node11);
             SendNeighbors(node9, node5, node6, node8, node10, node11);
             SendNeighbors(node10, node6, node7, node9, node11);
-            SendNeighbors(node11, node8, node9, node10);
-
-            // RETURN start node
-            return node0;
+            SendNeighbors(node11, node8, node9, node10);            
         }
 
         public static void SendNeighbors(IPEndPoint destination, IPEndPoint ep1, IPEndPoint ep2 = null, IPEndPoint ep3 = null, IPEndPoint ep4 = null, IPEndPoint ep5 = null, IPEndPoint ep6 = null)
